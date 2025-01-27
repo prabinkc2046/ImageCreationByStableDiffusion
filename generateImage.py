@@ -10,11 +10,11 @@ import shutil
 import threading
 
 prompts = [
-    "A glowing cyberpunk cityscape at night with neon lights reflecting in puddles, detailed and futuristic.",
-    "A surreal fusion of a roaring lion and an erupting volcano, vibrant flames blending into the mane.",
-    "An astronaut floating in a galaxy of jellyfish, with vivid cosmic colors and ethereal lighting.",
-    "A biomechanical dragon with gears and steam, merging fantasy with industrial steampunk design.",
-    "A minimalist mountain range with a giant moon rising, blending pastel and metallic gradients.",
+    # "A glowing cyberpunk cityscape at night with neon lights reflecting in puddles, detailed and futuristic.",
+    # "A surreal fusion of a roaring lion and an erupting volcano, vibrant flames blending into the mane.",
+    # "An astronaut floating in a galaxy of jellyfish, with vivid cosmic colors and ethereal lighting.",
+    # "A biomechanical dragon with gears and steam, merging fantasy with industrial steampunk design.",
+    # "A minimalist mountain range with a giant moon rising, blending pastel and metallic gradients.",
     "A phoenix rising from a vortex of abstract geometric shapes, fiery and energetic.",
     "A retro 80s vaporwave aesthetic with palm trees, sunsets, and gridlines, glowing in neon.",
     "A detailed octopus wearing headphones, DJing on a turntable submerged underwater.",
@@ -48,10 +48,16 @@ pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float
 pipe = pipe.to("cuda")  # Use GPU
 
 # Function to generate and save an image
-def generate_image(prompt, num_inference_steps=100, guidance_scale=12.5, seed=42, 
+def generate_image(prompt, num_inference_steps=100, guidance_scale=12.5, seed=None, 
                    save_path="generated_images", image_format="PNG", width=512, height=512, contrast=None):
     os.makedirs(save_path, exist_ok=True)  # Ensure save directory exists
+    
+    # Set a random seed if not provided
+    if seed is None:
+        seed = random.randint(0, 2**32 - 1)  # Generate a random seed
     generator = torch.manual_seed(seed)  # Set seed for reproducibility
+
+    print(f"Using seed: {seed}")  # Display the seed used for the generation
 
     # Generate image
     image = pipe(prompt, num_inference_steps=num_inference_steps, 
